@@ -124,7 +124,7 @@ github_repo="YourGitHubRepoName"
 github_token="YourGitHubAccessToken"
 
 # Use pacman to list installed packages and save the output to the file
-pacman -Qqe > "$output_file"
+pacman -Qdt > "$output_file"
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then
