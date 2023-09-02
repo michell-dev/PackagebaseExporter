@@ -59,6 +59,7 @@ Before=shutdown.target
 Type=oneshot
 ExecStart=/bin/true
 ExecStop=/path/to/your/export-packages.sh
+TimeoutStopSec=60
 
 [Install]
 WantedBy=shutdown.target
