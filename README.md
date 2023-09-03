@@ -39,8 +39,6 @@ fi
 
 ## Automation
 
-## Automation
-
 To run your script after every successful package installation using `pacman`, you can use the `pacman.d` hook system:
 
 ##### 01. **Create a Hook Script:**
