@@ -39,65 +39,56 @@ fi
 
 ## Automation
 
-To make the script run just before you turn off your PC, utilize a systemd service that triggers the script during the shutdown process. Here's how you can create and configure a systemd service for this purpose:
+## Automation
 
-##### 01. Create a new systemd service unit file. Run the following command to create the service unit file:
+To run your script after every successful package installation using `pacman`, you can use the `pacman.d` hook system:
 
-~~~
-sudo nano /etc/systemd/system/export-packages.service
-~~~
+##### 01. **Create a Hook Script:**
 
-##### 02. Add the following content to the `export-packages.service` file:
+Create a shell script that will be executed after each successful `pacman` package installation. You can name this script, for example, `mypostinstallhook.sh`, and place it in a suitable location (e.g., `/etc/pacman.d/hooks/`).
 
 ~~~
-[Unit]
-Description=Export Pacman packages list before shutdown
-DefaultDependencies=no
-Before=shutdown.target
-
-[Service]
-Type=oneshot
-ExecStart=/bin/true
-ExecStop=/path/to/your/export-packages.sh
-TimeoutStopSec=60
-
-[Install]
-WantedBy=shutdown.target
+sudo nano /etc/pacman.d/hooks/mypostinstallhook.sh
 ~~~
 
-Replace `/path/to/your/export-packages.sh` with the actual path to your script.
-
-##### 03. Enable the service:
+##### 02. Add the following content to the `mypostinstallhook.sh` script:
 
 ~~~
-sudo systemctl enable export-packages.service
+#!/bin/bash
+
+# Define the path to your script
+script_path="/path/to/your/script.sh"
+
+# Check if the script is executable
+if [ -x "$script_path" ]; then
+    # Execute the script
+    "$script_path"
+fi
 ~~~
 
-##### 04. Create a systemd target that runs the service before shutdown:
+Replace `/path/to/your/script.sh` with the actual path to your script.
+
+##### 03.**Create the Hook File**
+
+Create a hook file in `/etc/pacman.d/hooks/` that specifies when the hook script should be executed. You can name the hook file something like `mypostinstallhook.hook`.
 
 ~~~
-sudo nano /etc/systemd/system/export-packages.target
+sudo nano /etc/pacman.d/hooks/mypostinstallhook.hook
 ~~~
 
-##### 05. Add the following content to the `export-packages.target` file:
+######  Add the following content to the `mypostinstallhook.hook` file:
 
 ~~~
-[Unit]
-Description=Run export-packages service before shutdown
-Documentation=man:systemd.special(7)
+[Trigger]
+Operation = Install
+Type = Package
 
-[Install]
-WantedBy=multi-user.target
+[Action]
+Description = Execute mypostinstallhook script
+When = PostTransaction
+Exec = /etc/pacman.d/hooks/mypostinstallhook.sh
 ~~~
 
-##### 06. Set the new target as the default target before shutdown:
-
-~~~
-sudo systemctl set-default export-packages.target
-~~~
-
-
-Now, when you shut down your PC, the `export-packages.sh` script will be executed, and the list of installed Pacman packages will be exported to the `package-snapshot.txt` file just before the system turns off.
 
 ## GitHub Integration
 
