@@ -49,7 +49,7 @@ Create a shell script that will be executed after each successful `pacman` packa
 sudo nano /etc/pacman.d/hooks/mypostinstallhook.sh
 ~~~
 
-##### 02. Add the following content to the `mypostinstallhook.sh` script:
+###### Add the following content to the `mypostinstallhook.sh` script:
 
 ~~~
 #!/bin/bash
@@ -65,6 +65,12 @@ fi
 ~~~
 
 Replace `/path/to/your/script.sh` with the actual path to your script.
+
+##### 02. Make the Hook Script Executable:
+
+~~~
+sudo chmod +x /etc/pacman.d/hooks/mypostinstallhook.sh
+~~~
 
 ##### 03.**Create the Hook File**
 
