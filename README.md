@@ -86,6 +86,7 @@ sudo nano /etc/pacman.d/hooks/mypostinstallhook.hook
 [Trigger]
 Operation = Install
 Type = Package
+Target = *
 
 [Action]
 Description = Execute mypostinstallhook script
