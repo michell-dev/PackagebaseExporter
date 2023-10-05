@@ -116,9 +116,9 @@ You need to modify your `export-packages.sh` script to upload the file to your G
 
 # Define the output file name and GitHub repository details
 output_file="package-snapshot.txt"
-github_username="michell-dev"
-github_repo="archstation-dotfiles"
-github_token="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"
+github_username="your-username" 
+github_repo="your-repo"
+github_token="your-github-token" 
 
 # Use pacman to list installed packages and save the output to the file
 pacman -Qdt > "$output_file"
