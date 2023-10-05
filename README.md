@@ -116,9 +116,9 @@ You need to modify your `export-packages.sh` script to upload the file to your G
 
 # Define the output file name and GitHub repository details
 output_file="package-snapshot.txt"
-github_username="YourGitHubUsername"
-github_repo="YourGitHubRepoName"
-github_token="YourGitHubAccessToken"
+github_username="michell-dev"
+github_repo="archstation-dotfiles"
+github_token="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"
 
 # Use pacman to list installed packages and save the output to the file
 pacman -Qdt > "$output_file"
@@ -133,7 +133,13 @@ if [ $? -eq 0 ]; then
     # Create JSON data for the GitHub API request
     json_data=$(jq -n --arg content "$content_base64" '{ "message": "Update package-snapshot.txt", "content": $content }')
 
-    # Upload the file to GitHub using the GitHub API
+    # Get the SHA of the existing file (if it exists)
+    sha=$(curl -H "Authorization: token $github_token" -s "https://api.github.com/repos/$github_username/$github_repo/contents/$output_file" | jq -r .sha)
+
+    # Create JSON data with the SHA for the GitHub API request
+    json_data=$(jq -n --arg content "$content_base64" --arg sha "$sha" '{ "message": "Update package-snapshot.txt", "content": $content, "sha": $sha }')
+
+    # Upload the file to GitHub using the GitHub API with the SHA
     response=$(curl -X PUT \
         -H "Authorization: token $github_token" \
         -H "Content-Type: application/json" \
